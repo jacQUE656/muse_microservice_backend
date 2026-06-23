@@ -1,0 +1,15 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+  profiles:
+    active: native  # Tells Spring Cloud to look at the local file system
+  cloud:
+    config:
+      server:
+        native:
+          # Points to the 'config' folder at the root of this module
+          search-locations: file:${user.dir}/services/config-service/config
+

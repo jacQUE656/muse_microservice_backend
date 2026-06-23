@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: user-service  # <-- This tells it to go look for 'user-service.yml' on the server
+  config:
+    import: "optional:configserver:http://localhost:8888"
