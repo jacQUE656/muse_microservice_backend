@@ -1,3 +1,5 @@
 spring:
   application:
-    name: album-service
+    name: album-service  # Tells config-service to serve 'album-service.yml'
+  config:
+    import: "optional:configserver:http://localhost:8888" # Points to your centralized server

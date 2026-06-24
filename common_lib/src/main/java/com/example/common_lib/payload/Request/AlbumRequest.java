@@ -16,6 +16,7 @@ public class AlbumRequest {
     private String name;
     private String description;
     private String bgColor;
-    private MultipartFile imageFile;
+    private MultipartFile coverFile;
+    private boolean isPublic;
 
 }

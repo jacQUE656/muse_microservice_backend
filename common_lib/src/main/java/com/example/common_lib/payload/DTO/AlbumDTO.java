@@ -17,8 +17,10 @@ public class AlbumDTO {
 
     private String bgColor;
 
-    private String imageUrl;
+    private String coverUrl;
 
-    private String ownerId;
+    private String createdBy;
+
+    private boolean isPublic;
 
 }

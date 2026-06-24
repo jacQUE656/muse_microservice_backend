@@ -1,0 +1,3 @@
+eureka : 8761
+album server : 1001
+config-server : 8888
