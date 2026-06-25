@@ -4,6 +4,8 @@ import com.example.common_lib.payload.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -12,12 +14,13 @@ import lombok.*;
 @Builder
 public class UserDTO {
     private String id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
     private String phone;
     private UserRole role;
     private String profileImage;
+    private LocalDateTime lastLogin;
 
     @JsonProperty("isEmailVerified")
     private boolean isEmailVerified;

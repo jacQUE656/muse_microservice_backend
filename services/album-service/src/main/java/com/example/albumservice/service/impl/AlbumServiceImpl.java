@@ -12,6 +12,7 @@ import com.example.common_lib.payload.DTO.AlbumDtoList;
 import com.example.common_lib.payload.DTO.UserDTO;
 import com.example.common_lib.payload.Request.AlbumRequest;
 import com.example.common_lib.payload.enums.ErrorCode;
+import com.example.common_lib.payload.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,20 +42,26 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     @Transactional
     public void addAlbum(AlbumRequest request, UserDTO user) {
+        // 1. Check for duplicate album name
         albumRepository.findByName(request.getName())
                 .ifPresent(existingAlbum -> {
                     throw new BusinessException(ErrorCode.ALBUM_ALREADY_EXIST);
                 });
 
+        // 2. Process asset uploads
         String cover = uploadToCloudinary(request.getCoverFile());
 
+        // 3. Determine visibility (Admin uploads are public by default)
+        boolean isPublic = UserRole.ADMIN.equals(user.getRole());
+
+        // 4. Build and persist the entity
         Album album = Album.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .bgColor(request.getBgColor())
                 .coverUrl(cover)
                 .createdBy(user.getId())
-                .isPublic(false)
+                .isPublic(isPublic)
                 .build();
 
         albumRepository.save(album);

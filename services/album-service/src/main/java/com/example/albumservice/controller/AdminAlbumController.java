@@ -21,14 +21,4 @@ public class AdminAlbumController {
         return ResponseEntity.ok(albumService.getAllAlbums());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateAlbum(@PathVariable String id,
-                                                   @RequestBody AlbumRequest albumRequest,
-                                                   UserDTO userDTO
-                                             ){
-        albumService.updateToPublicAlbum(id, albumRequest, userDTO);
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("Successfully updated album");
-        return ResponseEntity.ok(apiResponse);
-    }
 }
