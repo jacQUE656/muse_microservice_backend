@@ -40,8 +40,8 @@ private final CustomUserDetailsService customUserDetailsService;
             throw new BusinessException(EMAIL_ALREADY_EXISTS);
         }
     }
-    private void checkPhoneNumber(String phoneNumber) {
-        final boolean phoneExists = this.userRepository.existsByPhoneNumber(phoneNumber);
+    private void checkPhoneNumber(String phone) {
+        final boolean phoneExists = this.userRepository.existsByPhone(phone);
         if (phoneExists){
             throw new BusinessException(ErrorCode.PHONE_ALREADY_EXISTS);
         }
@@ -87,14 +87,14 @@ private final CustomUserDetailsService customUserDetailsService;
     @Override
     @Transactional
     public UserDTO signUp(RegisterRequest req) {
-        checkPhoneNumber(req.getPhoneNumber());
+        checkPhoneNumber(req.getPhone());
         checkUserEmail(req.getEmail());
         //BUILD  USER
         User user = User.builder()
                 .firstName(req.getFirstname())
                 .lastName(req.getLastname())
                 .email(req.getEmail())
-                .phone(req.getPhoneNumber())
+                .phone(req.getPhone())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .role(UserRole.USER)
                 .build();

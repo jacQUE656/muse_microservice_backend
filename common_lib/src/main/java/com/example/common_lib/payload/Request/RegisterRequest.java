@@ -23,7 +23,7 @@ public class RegisterRequest {
     //@NonDisposableEmail(message = "VALIDATION.REGISTRATION.EMAIL.DISPOSABLE")
     private String email;
 
-    private String phoneNumber;
+    private String phone;
 
    @NotBlank(message = "VALIDATION.REGISTRATION.PASSWORD.NOT_BLANK")
   @Size(min = 6 , max = 50, message ="VALIDATION.REGISTRATION.PASSWORD.SIZE")

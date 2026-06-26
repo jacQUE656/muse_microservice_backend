@@ -9,7 +9,7 @@ public interface UserRepository extends JpaRepository<User,String> {
     User findByEmail(String email);
     boolean existsByEmailIgnoreCase(String email);
 
-    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByPhone(String phone);
 
     Optional<User> findByEmailIgnoreCase(String email);
 }
