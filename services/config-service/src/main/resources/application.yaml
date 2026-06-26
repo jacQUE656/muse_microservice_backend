@@ -4,12 +4,13 @@ server:
 spring:
   application:
     name: config-service
-  profiles:
-    active: native  # Tells Spring Cloud to look at the local file system
   cloud:
     config:
       server:
-        native:
-          # Points to the 'config' folder at the root of this module
-          search-locations: file:${user.dir}/services/config-service/config
+        git:
+          uri: https://github.com/jacQUE656/muse_microservice_backend.git
+          clone-on-start: true
+          default-label: main
 
+          # 📂 Exact relative path from the repository root to your config files
+          search-paths: services/config-service/config

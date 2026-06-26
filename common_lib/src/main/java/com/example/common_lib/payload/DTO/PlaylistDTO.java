@@ -1,7 +1,6 @@
 package com.example.common_lib.payload.DTO;
 
 
-import com.example.musebackend.enums.Views;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +24,6 @@ public class PlaylistDTO {
     private String image;
     @JsonProperty("songs")
     private List<SongDTO> song;
-    @JsonProperty("views")
-    private Views views;
+    @JsonProperty("isPublic")
+    private boolean isPublic;
 }
