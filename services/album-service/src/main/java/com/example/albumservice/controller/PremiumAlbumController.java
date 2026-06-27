@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/premium/album")
+@RequestMapping("/api/premium/albums")
 public class PremiumAlbumController {
     private  final AlbumService albumService;
     private final UserFeignClient userFeignClient;

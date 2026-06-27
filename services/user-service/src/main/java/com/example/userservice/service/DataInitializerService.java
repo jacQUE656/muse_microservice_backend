@@ -33,6 +33,7 @@ public class DataInitializerService implements CommandLineRunner {
                     .phone("0123456789")
                     .password(passwordEncoder.encode("admin:65"))
                     .role(UserRole.ADMIN)
+                    .emailVerified(true)
                     .build();
             userRepository.save(admin);
             log.info("Default admin created : email = admin65@gmail.com , password = admin65 ");
@@ -50,6 +51,7 @@ public class DataInitializerService implements CommandLineRunner {
                     .phone("01234567890")
                     .password(passwordEncoder.encode("premiumUser:56"))
                     .role(UserRole.PREMIUM_USER)
+                    .emailVerified(true)
                     .build();
             userRepository.save(pUser);
             log.info("Default Super admin created : email = premiumuser@gmail.com , password = premiumUser:56 ");
