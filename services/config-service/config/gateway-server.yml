@@ -7,7 +7,6 @@ spring:
 
   cloud:
     gateway:
-      # REQUIRED for spring-cloud-starter-gateway-server-webflux
       server:
         webflux:
           routes:
@@ -18,7 +17,7 @@ spring:
               filters:
                 - name: GatewayAuthFilter
                   args:
-                    allowedRoles: USER,ADMIN,PREMIUM_USER
+                    allowedRoles: &standardRoles USER,ADMIN,PREMIUM_USER
 
             - id: AUTH-SERVICE
               uri: lb://USER-SERVICE
@@ -59,7 +58,7 @@ spring:
               filters:
                 - name: GatewayAuthFilter
                   args:
-                    allowedRoles: USER,ADMIN,PREMIUM_USER
+                    allowedRoles: *standardRoles
 
             - id: SONG-SERVICE-USER
               uri: lb://SONG-SERVICE
@@ -68,7 +67,7 @@ spring:
               filters:
                 - name: GatewayAuthFilter
                   args:
-                    allowedRoles: USER,ADMIN,PREMIUM_USER
+                    allowedRoles: *standardRoles
 
             - id: SONG-SERVICE-ADMIN
               uri: lb://SONG-SERVICE
@@ -88,9 +87,6 @@ spring:
                   args:
                     allowedRoles: PREMIUM_USER
 
-      # Disabled: manual routes above already cover every service.
-      # Leaving this enabled would expose auto-generated routes like
-      # /album-service/** that bypass GatewayAuthFilter entirely.
       discovery:
         locator:
           enabled: false
