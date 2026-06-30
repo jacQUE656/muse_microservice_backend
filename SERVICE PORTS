@@ -1,0 +1,5 @@
+eureka : 8761
+album server : 1001
+config-server : 8888
+user-server : 1002
+song-server : 1003

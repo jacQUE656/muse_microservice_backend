@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/premium/songs")
 public class PremiumSongController {
-    private SongService songService;
-    private UserFeignClient userFeignClient;
+    private final SongService songService;
+    private final UserFeignClient userFeignClient;
 
     @PutMapping("/(id}")
     public ResponseEntity<ApiResponse> updateToPublic(

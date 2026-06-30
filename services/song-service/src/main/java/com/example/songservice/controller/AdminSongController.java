@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/songs")
 public class AdminSongController {
-    private SongService songService;
+    private final SongService songService;
 
     @GetMapping
     public ResponseEntity<SongDtoList> getAllSongs(){
