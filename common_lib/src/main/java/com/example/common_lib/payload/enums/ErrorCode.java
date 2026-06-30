@@ -27,7 +27,9 @@ public enum ErrorCode {
     INTERNAL_EXCEPTION("INTERNAL_EXCEPTION", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR),
     UNAUTHORIZED_ACCESS("UNAUTHORIZED_ACCESS","unauthorized access" , HttpStatus.UNAUTHORIZED ),
     NOTIFICATION_NOT_FOUND("NOTIFICATION_NOT_FOUND","Notification not found" , HttpStatus.NOT_FOUND ),
-    FILE_UPLOAD_FAILED("FILE_UPLOAD_FAILED","File Upload Failed" ,HttpStatus.BAD_REQUEST );
+    FILE_UPLOAD_FAILED("FILE_UPLOAD_FAILED","File Upload Failed" ,HttpStatus.BAD_REQUEST ),
+    AUDIO_FILE_REQUIRED("AUDIO_FILE_REQUIRED","Audio file required" ,HttpStatus.BAD_REQUEST );
+
     private final String code;
     private final String defaultMessage;
     private final HttpStatus status;

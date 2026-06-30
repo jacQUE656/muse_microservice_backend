@@ -24,6 +24,4 @@ public class SongRequest {
 
     private MultipartFile imageFile;
 
-    private String ownerId;
-
 }

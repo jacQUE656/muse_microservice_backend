@@ -100,6 +100,7 @@ private final CustomUserDetailsService customUserDetailsService;
                 .build();
 
         //SEND EMAIL
+        userRepository.save(user);
         return UserMapper.toUserDTO(user);
     }
 

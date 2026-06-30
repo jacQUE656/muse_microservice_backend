@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // Strict internal path authorization
-                        .requestMatchers("/api/users/**").hasAnyAuthority("PREMIUM_USER", "ADMIN")
+                        .requestMatchers("/api/users/**").hasAnyAuthority("PREMIUM_USER", "ADMIN","USER")
                         .anyRequest().hasAnyAuthority("PREMIUM_USER")
                 )
 

@@ -29,6 +29,7 @@ public class AlbumMapper {
     public static AlbumDtoList toDtoList(List<Album> albums) {
         if (albums == null) {
             return null;
+
         }
 
         List<AlbumDTO> dtoList = albums.stream()

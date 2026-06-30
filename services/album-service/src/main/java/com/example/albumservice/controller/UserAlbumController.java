@@ -76,7 +76,7 @@ public class UserAlbumController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<AlbumDtoList> getUserAlbumById(
+    public ResponseEntity<AlbumDtoList> getUserAlbumByUser(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
 
         UserDTO user = getUserFromToken(token);

@@ -61,6 +61,33 @@ spring:
                   args:
                     allowedRoles: USER,ADMIN,PREMIUM_USER
 
+            - id: SONG-SERVICE-USER
+              uri: lb://SONG-SERVICE
+              predicates:
+                - Path=/api/songs/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: USER,ADMIN,PREMIUM_USER
+
+            - id: SONG-SERVICE-ADMIN
+              uri: lb://SONG-SERVICE
+              predicates:
+                - Path=/api/admin/songs/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: ADMIN
+
+            - id: SONG-SERVICE-PREMIUM
+              uri: lb://SONG-SERVICE
+              predicates:
+                - Path=/api/premium/songs/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: PREMIUM_USER
+
       # Disabled: manual routes above already cover every service.
       # Leaving this enabled would expose auto-generated routes like
       # /album-service/** that bypass GatewayAuthFilter entirely.

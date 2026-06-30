@@ -20,11 +20,11 @@ public class SongDTO {
 
     private String image;
 
-    private String file;
+    private String audioFile;
 
     private String duration;
 
     private LocalDate dateAdded;
 
-    private String uploadedBy;
+    private String createdBy;
 }

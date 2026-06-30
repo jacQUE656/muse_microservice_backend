@@ -1,4 +1,4 @@
-package com.example.albumservice.service.client;
+package com.example.songservice.service.client;
 
 import com.example.common_lib.payload.DTO.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
