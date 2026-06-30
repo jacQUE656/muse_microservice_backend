@@ -177,4 +177,14 @@ public class SongServiceImpl implements SongService {
         songRepository.save(song);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public SongDtoList getSongsByIds(List<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return SongMapper.toDtoList(List.of());
+        }
+        List<Song> songs = songRepository.findAllById(ids);
+        return SongMapper.toDtoList(songs);
+    }
+
 }

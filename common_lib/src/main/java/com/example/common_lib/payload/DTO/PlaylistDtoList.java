@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDtoList {
+public class PlaylistDtoList {
     private boolean success;
-    @JsonProperty("users")
-    private List<UserDTO> users;
+    @JsonProperty("playlists")
+    private List<PlaylistDTO> playlists;
 }

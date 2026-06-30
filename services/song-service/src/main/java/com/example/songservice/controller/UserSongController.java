@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -88,5 +90,11 @@ public class UserSongController {
 
     private UserDTO getUserFromToken(String token) {
         return userFeignClient.getUserProfileFromJwt(token).getBody();
+    }
+
+    @GetMapping("/batch")
+    public ResponseEntity<SongDtoList> getSongsByIds(@RequestParam List<String> ids) {
+        SongDtoList songs = songService.getSongsByIds(ids);
+        return ResponseEntity.ok(songs);
     }
 }

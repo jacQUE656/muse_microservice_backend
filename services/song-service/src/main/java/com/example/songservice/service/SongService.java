@@ -6,6 +6,7 @@ import com.example.common_lib.payload.DTO.UserDTO;
 import com.example.common_lib.payload.Request.SongRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public interface SongService {
@@ -16,5 +17,6 @@ public interface SongService {
     SongDTO getSongById(String id);
     void deleteSongById(String id ,  UserDTO user);
     void updateToPublicSong(String songId, UserDTO user);
+    SongDtoList getSongsByIds(List<String> ids);
 
 }

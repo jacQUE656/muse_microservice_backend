@@ -12,6 +12,6 @@ import java.util.List;
 @Builder
 public class SongDtoList {
     private boolean success;
-    @JsonProperty("albums")
+    @JsonProperty("songs")
     private List<SongDTO> songs;
 }

@@ -87,6 +87,33 @@ spring:
                   args:
                     allowedRoles: PREMIUM_USER
 
+            - id: PLAYLIST-SERVICE-ADMIN
+              uri: lb://PLAYLIST-SERVICE
+              predicates:
+                - Path=/api/admin/playlists/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: ADMIN
+
+            - id: PLAYLIST-SERVICE-PREMIUM
+              uri: lb://PLAYLIST-SERVICE
+              predicates:
+                - Path=/api/premium/playlists/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: PREMIUM_USER
+
+            - id: PLAYLIST-SERVICE-USER
+              uri: lb://PLAYLIST-SERVICE
+              predicates:
+                - Path=/api/playlists/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: *standardRoles
+
       discovery:
         locator:
           enabled: false
