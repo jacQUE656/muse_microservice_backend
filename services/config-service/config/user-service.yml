@@ -12,21 +12,6 @@ spring:
     password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  jpa:
-    show-sql: true
-    open-in-view: false
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
-    hibernate:
-      ddl-auto: update
-
-  servlet:
-    multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
-
   security:
     oauth2:
       client:
@@ -37,26 +22,6 @@ spring:
             scope:
               - profile
               - email
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-      hibernate:
-        SQL: DEBUG
-
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-
-# 🔐 Custom Security Properties Block
-jwt:
-  access-token-expiration: 86400000     # 24 hours in milliseconds
-  refresh-token-expiration: 604800000   # 7 days in milliseconds
 
 # 📧 Structured as a clean list for effortless @ConfigurationProperties binding
 disposable:

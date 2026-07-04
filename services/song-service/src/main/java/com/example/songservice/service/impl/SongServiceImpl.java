@@ -2,6 +2,7 @@ package com.example.songservice.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.common_lib.kafka.KafkaTopics;
 import com.example.common_lib.msException.BusinessException;
 import com.example.common_lib.payload.DTO.SongDTO;
 import com.example.common_lib.payload.DTO.SongDtoList;
@@ -9,12 +10,14 @@ import com.example.common_lib.payload.DTO.UserDTO;
 import com.example.common_lib.payload.Request.SongRequest;
 import com.example.common_lib.payload.enums.ErrorCode;
 import com.example.common_lib.payload.enums.UserRole;
+import com.example.common_lib.payload.event.SongUploadedEvent;
 import com.example.songservice.mapper.SongMapper;
 import com.example.songservice.model.Song;
 import com.example.songservice.repository.SongRepository;
 import com.example.songservice.service.SongService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +34,7 @@ public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
     private final Cloudinary cloudinary;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private String formatDuration(Double durationSeconds) {
         if (durationSeconds == null) {
@@ -108,6 +112,15 @@ public class SongServiceImpl implements SongService {
                 .build();
 
         songRepository.save(song);
+        // Publish event after successful save
+        kafkaTemplate.send(KafkaTopics.SONG_UPLOADED,
+                SongUploadedEvent.builder()
+                        .songId(song.getId())
+                        .songName(song.getName())
+                        .uploadedByUserId(user.getId())
+                        .uploaderEmail(user.getEmail())
+                        .fcmToken(user.getFcmToken())
+                        .build());
     }
 
     @Override

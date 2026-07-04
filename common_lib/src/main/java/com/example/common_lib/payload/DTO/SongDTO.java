@@ -1,5 +1,6 @@
 package com.example.common_lib.payload.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -27,4 +28,7 @@ public class SongDTO {
     private LocalDate dateAdded;
 
     private String createdBy;
+
+    @JsonProperty("isPublic")
+    private Boolean isPublic;
 }

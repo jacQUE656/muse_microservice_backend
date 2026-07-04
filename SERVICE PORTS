@@ -4,3 +4,4 @@ config-server : 8888
 user-server : 1002
 song-server : 1003
 playlist-server : 1004
+notification-server : 1005

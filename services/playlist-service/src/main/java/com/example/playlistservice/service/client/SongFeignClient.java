@@ -15,6 +15,6 @@ public interface SongFeignClient {
     @GetMapping("/api/songs/batch")
     ResponseEntity<List<SongDTO>> getSongsByIds(@RequestParam("ids") List<String> ids);
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/songs/{id}")
      ResponseEntity<SongDTO> getSongById(@PathVariable String id);
 }

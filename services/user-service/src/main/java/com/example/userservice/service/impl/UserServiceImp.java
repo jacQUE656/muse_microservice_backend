@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final Cloudinary cloudinary;
     private final JwtService jwtService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
     @Transactional(readOnly = true)

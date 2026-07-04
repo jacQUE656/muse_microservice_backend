@@ -6,6 +6,7 @@ import com.example.albumservice.mapper.AlbumMapper;
 import com.example.albumservice.model.Album;
 import com.example.albumservice.repository.AlbumRepository;
 import com.example.albumservice.service.AlbumService;
+import com.example.common_lib.kafka.KafkaTopics;
 import com.example.common_lib.msException.BusinessException;
 import com.example.common_lib.payload.DTO.AlbumDTO;
 import com.example.common_lib.payload.DTO.AlbumDtoList;
@@ -13,8 +14,10 @@ import com.example.common_lib.payload.DTO.UserDTO;
 import com.example.common_lib.payload.Request.AlbumRequest;
 import com.example.common_lib.payload.enums.ErrorCode;
 import com.example.common_lib.payload.enums.UserRole;
+import com.example.common_lib.payload.event.AlbumCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +33,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     private final AlbumRepository albumRepository;
     private final Cloudinary cloudinary;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private String uploadToCloudinary(MultipartFile file) {
         try {
@@ -73,6 +77,16 @@ public class AlbumServiceImpl implements AlbumService {
                 .build();
 
         albumRepository.save(album);
+
+        // Publish event after successful save
+        kafkaTemplate.send(KafkaTopics.ALBUM_CREATED,
+                AlbumCreatedEvent.builder()
+                        .albumId(album.getId())
+                        .albumName(album.getName())
+                        .createdByUserId(user.getId())
+                        .creatorEmail(user.getEmail())
+                        .fcmToken(user.getFcmToken())
+                        .build());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.gatewayserver.filter;
 
 import com.example.gatewayserver.config.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +14,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class GatewayAuthFilter extends AbstractGatewayFilterFactory<GatewayAuthFilter.Config> {
 
@@ -37,8 +40,9 @@ public class GatewayAuthFilter extends AbstractGatewayFilterFactory<GatewayAuthF
         }
 
         public void setAllowedRoles(String allowedRoles) {
-            // Parses the clean config strings directly (e.g., "ADMIN,USER")
-            this.allowedRoles = Arrays.asList(allowedRoles.split(","));
+            this.allowedRoles = Arrays.stream(allowedRoles.split(","))
+                    .map(String::trim)  // handles accidental spaces in config
+                    .collect(Collectors.toList());
         }
     }
 
@@ -46,53 +50,69 @@ public class GatewayAuthFilter extends AbstractGatewayFilterFactory<GatewayAuthF
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            String path = request.getURI().getPath();
 
-            // 🚀 BYPASS CHECK
-            if (path.startsWith("/api/auth/")) {
-                return chain.filter(exchange);
-            }
+            // 1. Check for Authorization header
+            String authHeader = request.getHeaders()
+                    .getFirst(HttpHeaders.AUTHORIZATION);
 
-            // 1. Check for Authorization header presence
-            String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                log.warn("Missing or invalid Authorization header — path: {}",
+                        request.getURI().getPath());
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
 
             String token = authHeader.substring(7);
 
             try {
-                // 2. Validate token expiration
+                // 2. Validate token expiry
                 if (jwtUtil.isTokenExpired(token)) {
+                    log.warn("Expired token — path: {}",
+                            request.getURI().getPath());
                     return onError(exchange, HttpStatus.UNAUTHORIZED);
                 }
 
-                // 3. Extract raw authorities string array directly from your JWT payload
-                List<String> authoritiesList = jwtUtil.extractAuthoritiesList(token);
+                // 3. Extract roles from token
+                List<String> authoritiesList =
+                        jwtUtil.extractAuthoritiesList(token);
 
-                // 🔒 ROLE CHECK VALIDATION (Raw matching without "ROLE_" prefix logic)
-                if (config.getAllowedRoles() != null && !config.getAllowedRoles().isEmpty()) {
+                if (authoritiesList == null || authoritiesList.isEmpty()) {
+                    log.warn("Token has no roles — path: {}",
+                            request.getURI().getPath());
+                    return onError(exchange, HttpStatus.FORBIDDEN);
+                }
+
+                // 4. Check role against allowed roles for this route
+                if (config.getAllowedRoles() != null
+                        && !config.getAllowedRoles().isEmpty()) {
+
                     boolean hasRequiredRole = config.getAllowedRoles().stream()
                             .anyMatch(authoritiesList::contains);
 
                     if (!hasRequiredRole) {
+                        log.warn("Access denied — user roles: {} required: {} path: {}",
+                                authoritiesList,
+                                config.getAllowedRoles(),
+                                request.getURI().getPath());
                         return onError(exchange, HttpStatus.FORBIDDEN);
                     }
                 }
 
+                // 5. Forward user context downstream via headers
                 String userId = jwtUtil.extractUserId(token);
                 String authoritiesString = String.join(",", authoritiesList);
 
-                // 4. Mutate request & forward headers downstream
                 ServerHttpRequest mutatedRequest = request.mutate()
                         .header(HttpHeaders.AUTHORIZATION, authHeader)
                         .header("X-User-Id", userId)
                         .header("X-User-Roles", authoritiesString)
                         .build();
 
-                return chain.filter(exchange.mutate().request(mutatedRequest).build());
+                return chain.filter(
+                        exchange.mutate().request(mutatedRequest).build());
 
             } catch (Exception e) {
+                log.error("Error processing token — path: {} error: {}",
+                        request.getURI().getPath(), e.getMessage());
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
         };

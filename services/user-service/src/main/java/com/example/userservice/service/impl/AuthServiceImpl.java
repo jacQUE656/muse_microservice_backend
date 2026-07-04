@@ -14,12 +14,17 @@ import com.example.userservice.repository.UserRepository;
 import com.example.userservice.service.AuthService;
 import com.example.userservice.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.common_lib.kafka.KafkaTopics;
+import com.example.common_lib.payload.event.UserRegisteredEvent;
+import com.example.common_lib.payload.event.EmailVerificationEvent;
+import com.example.common_lib.payload.event.PasswordResetEvent;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 private final CustomUserDetailsService customUserDetailsService;
 
     private void checkUserEmail(String email) {
@@ -101,6 +107,13 @@ private final CustomUserDetailsService customUserDetailsService;
 
         //SEND EMAIL
         userRepository.save(user);
+        kafkaTemplate.send(KafkaTopics.USER_REGISTERED,
+                UserRegisteredEvent.builder()
+                        .userId(user.getId())
+                        .email(user.getEmail())
+                        .firstName(user.getFirstName())
+                        .fcmToken(user.getFcmToken())
+                        .build());
         return UserMapper.toUserDTO(user);
     }
 

@@ -12,6 +12,12 @@
     <description>user-service manages users, authentication, profile and roles for muse ms system</description>
 
     <dependencies>
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>

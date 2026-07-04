@@ -85,7 +85,7 @@ spring:
               filters:
                 - name: GatewayAuthFilter
                   args:
-                    allowedRoles: PREMIUM_USER
+                    allowedRoles: PREMIUM_USER,ADMIN
 
             - id: PLAYLIST-SERVICE-ADMIN
               uri: lb://PLAYLIST-SERVICE
@@ -114,6 +114,15 @@ spring:
                   args:
                     allowedRoles: *standardRoles
 
+            - id: NOTIFICATION-SERVICE
+              uri: lb://NOTIFICATION-SERVICE
+              predicates:
+                - Path=/api/notifications/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: *standardRoles
+
       discovery:
         locator:
           enabled: false
@@ -122,14 +131,3 @@ spring:
       httpclient:
         connect-timeout: 3000
         response-timeout: 10s
-
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-
-jwt:
-  access-token-expiration: 86400000
-  refresh-token-expiration: 604800000

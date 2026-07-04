@@ -55,6 +55,8 @@ public class User {
 
     private boolean emailVerified;
 
+    private String fcmToken;
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

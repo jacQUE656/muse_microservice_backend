@@ -17,13 +17,13 @@ public class PremiumSongController {
     private final SongService songService;
     private final UserFeignClient userFeignClient;
 
-    @PutMapping("/(id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateToPublic(
-            @PathVariable("songId") String songId,
+            @PathVariable String id,
             @RequestHeader("Authorization") String token
             ){
         UserDTO user = userFeignClient.getUserProfileFromJwt(token).getBody();
-        songService.updateToPublicSong(songId, user);
+        songService.updateToPublicSong(id, user);
 
         return  ResponseEntity.ok(new ApiResponse("update successful"));
 

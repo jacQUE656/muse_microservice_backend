@@ -2,6 +2,7 @@ package com.example.playlistservice.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.common_lib.kafka.KafkaTopics;
 import com.example.common_lib.msException.BusinessException;
 import com.example.common_lib.payload.DTO.PlaylistDTO;
 import com.example.common_lib.payload.DTO.PlaylistDtoList;
@@ -10,6 +11,7 @@ import com.example.common_lib.payload.DTO.UserDTO;
 import com.example.common_lib.payload.Request.PlaylistRequest;
 import com.example.common_lib.payload.enums.ErrorCode;
 import com.example.common_lib.payload.enums.UserRole;
+import com.example.common_lib.payload.event.PlaylistCreatedEvent;
 import com.example.playlistservice.mapper.PlaylistMapper;
 import com.example.playlistservice.model.Playlist;
 import com.example.playlistservice.repository.PlaylistRepository;
@@ -17,9 +19,11 @@ import com.example.playlistservice.service.PlaylistService;
 import com.example.playlistservice.service.client.SongFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +41,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final Cloudinary cloudinary;
     private final SongFeignClient songFeignClient;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private String uploadToCloudinary(MultipartFile file) {
         try {
@@ -91,6 +96,15 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .build();
 
         playlistRepository.save(playlist);
+        // Publish event after successful save
+        kafkaTemplate.send(KafkaTopics.PLAYLIST_CREATED,
+                PlaylistCreatedEvent.builder()
+                        .playlistId(playlist.getId())
+                        .playlistName(playlist.getName())
+                        .createdByUserId(user.getId())
+                        .creatorEmail(user.getEmail())
+                        .fcmToken(user.getFcmToken())
+                        .build());
     }
 
     @Override

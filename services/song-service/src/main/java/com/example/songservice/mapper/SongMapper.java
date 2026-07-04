@@ -23,6 +23,7 @@ public class SongMapper {
                 .duration(song.getDuration())
                 .dateAdded(song.getDateAdded())
                 .createdBy(song.getCreatedBy())
+                .isPublic(song.isPublic())
                 .build();
     }
     public static SongDtoList toDtoList(List<Song> songs) {

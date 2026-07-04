@@ -12,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class SongRequest {
 
-    private String id;
-
     private String name;
 
     private String description;
