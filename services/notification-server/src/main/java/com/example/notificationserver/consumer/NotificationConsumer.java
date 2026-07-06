@@ -1,6 +1,5 @@
 package com.example.notificationserver.consumer;
 
-
 import com.example.common_lib.kafka.KafkaTopics;
 import com.example.common_lib.payload.event.*;
 import com.example.notificationserver.service.EmailService;
@@ -22,8 +21,10 @@ public class NotificationConsumer {
     private final InAppNotificationService inAppService;
     private final EmailTemplates templates;
 
-    @KafkaListener(topics = KafkaTopics.USER_REGISTERED,
-            groupId = "notification-service")
+    @KafkaListener(
+            topics = KafkaTopics.USER_REGISTERED,
+            groupId = "notification-service",
+            containerFactory = "userRegisteredFactory")
     public void onUserRegistered(UserRegisteredEvent event) {
         log.info("User registered event: {}", event.getEmail());
 
@@ -40,8 +41,10 @@ public class NotificationConsumer {
                 "Hi " + event.getFirstName() + ", your account is ready!");
     }
 
-    @KafkaListener(topics = KafkaTopics.EMAIL_VERIFICATION,
-            groupId = "notification-service")
+    @KafkaListener(
+            topics = KafkaTopics.EMAIL_VERIFICATION,
+            groupId = "notification-service",
+            containerFactory = "emailVerificationFactory")
     public void onEmailVerification(EmailVerificationEvent event) {
         log.info("Email verification event: {}", event.getEmail());
 
@@ -51,8 +54,10 @@ public class NotificationConsumer {
                         event.getFirstName(), event.getVerificationLink()));
     }
 
-    @KafkaListener(topics = KafkaTopics.PASSWORD_RESET,
-            groupId = "notification-service")
+    @KafkaListener(
+            topics = KafkaTopics.PASSWORD_RESET,
+            groupId = "notification-service",
+            containerFactory = "passwordResetFactory")
     public void onPasswordReset(PasswordResetEvent event) {
         log.info("Password reset event: {}", event.getEmail());
 
@@ -62,8 +67,10 @@ public class NotificationConsumer {
                         event.getFirstName(), event.getResetLink()));
     }
 
-    @KafkaListener(topics = KafkaTopics.SONG_UPLOADED,
-            groupId = "notification-service")
+    @KafkaListener(
+            topics = KafkaTopics.SONG_UPLOADED,
+            groupId = "notification-service",
+            containerFactory = "songUploadedFactory")
     public void onSongUploaded(SongUploadedEvent event) {
         log.info("Song uploaded event: {}", event.getSongName());
 
@@ -80,8 +87,10 @@ public class NotificationConsumer {
                 "\"" + event.getSongName() + "\" is now live.");
     }
 
-    @KafkaListener(topics = KafkaTopics.ALBUM_CREATED,
-            groupId = "notification-service")
+    @KafkaListener(
+            topics = KafkaTopics.ALBUM_CREATED,
+            groupId = "notification-service",
+            containerFactory = "albumCreatedFactory")
     public void onAlbumCreated(AlbumCreatedEvent event) {
         log.info("Album created event: {}", event.getAlbumName());
 
@@ -98,8 +107,10 @@ public class NotificationConsumer {
                 "\"" + event.getAlbumName() + "\" is live on Muse.");
     }
 
-    @KafkaListener(topics = KafkaTopics.PLAYLIST_CREATED,
-            groupId = "notification-service")
+    @KafkaListener(
+            topics = KafkaTopics.PLAYLIST_CREATED,
+            groupId = "notification-service",
+            containerFactory = "playlistCreatedFactory")
     public void onPlaylistCreated(PlaylistCreatedEvent event) {
         log.info("Playlist created event: {}", event.getPlaylistName());
 
@@ -116,8 +127,10 @@ public class NotificationConsumer {
                 "\"" + event.getPlaylistName() + "\" is ready to fill.");
     }
 
-    @KafkaListener(topics = KafkaTopics.SONG_ADDED_TO_PLAYLIST,
-            groupId = "notification-service")
+    @KafkaListener(
+            topics = KafkaTopics.SONG_ADDED_TO_PLAYLIST,
+            groupId = "notification-service",
+            containerFactory = "songAddedToPlaylistFactory")
     public void onSongAddedToPlaylist(SongAddedToPlaylistEvent event) {
         log.info("Song added to playlist event: {}", event.getSongName());
 
