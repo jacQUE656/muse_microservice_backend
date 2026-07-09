@@ -25,12 +25,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
-                        // Only health check is open for internal service discovery
                         .requestMatchers("/api/health", "/error").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Strict internal path authorization
-                        .requestMatchers("/api/users/**").hasAnyAuthority("PREMIUM_USER", "ADMIN","USER")
+                        // Admin routes — must come before /api/users/** and anyRequest()
+                        .requestMatchers("/api/admin/users/**").hasAuthority("ADMIN")
+
+                        .requestMatchers("/api/users/**").hasAnyAuthority("PREMIUM_USER", "ADMIN", "USER")
                         .anyRequest().hasAnyAuthority("PREMIUM_USER")
                 )
 
