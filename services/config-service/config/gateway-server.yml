@@ -114,8 +114,8 @@ spring:
                   args:
                     allowedRoles: *standardRoles
 
-            - id: NOTIFICATION-SERVICE
-              uri: lb://NOTIFICATION-SERVICE
+            - id: NOTIFICATION-SERVER
+              uri: lb://NOTIFICATION-SERVER
               predicates:
                 - Path=/api/notifications/**
               filters:
