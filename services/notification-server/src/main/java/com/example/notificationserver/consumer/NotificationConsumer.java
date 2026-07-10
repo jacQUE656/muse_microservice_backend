@@ -149,4 +149,64 @@ public class NotificationConsumer {
                 "\"" + event.getSongName() + "\" is in \""
                         + event.getPlaylistName() + "\".");
     }
+
+    @KafkaListener(
+            topics = KafkaTopics.ALBUM_DELETED,
+            groupId = "notification-service",
+            containerFactory = "albumDeletedFactory")
+    public void onAlbumDeleted(AlbumDeletedEvent event) {
+        log.info("Album deleted event: {}", event.getAlbumName());
+
+        emailService.sendHtml(event.getCreatorEmail(),
+                "Album deleted 🗑️",
+                templates.albumDeleted(event.getAlbumName()));
+
+        inAppService.save(event.getDeletedByUserId(),
+                "Album deleted",
+                "Your album \"" + event.getAlbumName() + "\" has been deleted.");
+
+        pushService.sendPush(event.getFcmToken(),
+                "Album deleted",
+                "\"" + event.getAlbumName() + "\" has been removed from Muse.");
+    }
+
+    @KafkaListener(
+            topics = KafkaTopics.SONG_DELETED,
+            groupId = "notification-service",
+            containerFactory = "songDeletedFactory")
+    public void onSongDeleted(SongDeletedEvent event) {
+        log.info("Song deleted event: {}", event.getSongName());
+
+        emailService.sendHtml(event.getUploaderEmail(),
+                "Song deleted 🗑️",
+                templates.songDeleted(event.getSongName()));
+
+        inAppService.save(event.getDeletedByUserId(),
+                "Song deleted",
+                "\"" + event.getSongName() + "\" has been deleted.");
+
+        pushService.sendPush(event.getFcmToken(),
+                "Song deleted",
+                "\"" + event.getSongName() + "\" has been removed from Muse.");
+    }
+
+    @KafkaListener(
+            topics = KafkaTopics.PLAYLIST_DELETED,
+            groupId = "notification-service",
+            containerFactory = "playlistDeletedFactory")
+    public void onPlaylistDeleted(PlaylistDeletedEvent event) {
+        log.info("Playlist deleted event: {}", event.getPlaylistName());
+
+        emailService.sendHtml(event.getCreatorEmail(),
+                "Playlist deleted 🗑️",
+                templates.playlistDeleted(event.getPlaylistName()));
+
+        inAppService.save(event.getDeletedByUserId(),
+                "Playlist deleted",
+                "Your playlist \"" + event.getPlaylistName() + "\" has been deleted.");
+
+        pushService.sendPush(event.getFcmToken(),
+                "Playlist deleted",
+                "\"" + event.getPlaylistName() + "\" has been removed from Muse.");
+    }
 }

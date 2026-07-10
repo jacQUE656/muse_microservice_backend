@@ -8,4 +8,7 @@ public class KafkaTopics {
     public static final String ALBUM_CREATED          = "album.created";
     public static final String PLAYLIST_CREATED       = "playlist.created";
     public static final String SONG_ADDED_TO_PLAYLIST = "song.added.to.playlist";
+    public static final String ALBUM_DELETED = "album.deleted";
+    public static final String SONG_DELETED = "song.deleted";
+    public static final String PLAYLIST_DELETED = "playlist.deleted";
 }

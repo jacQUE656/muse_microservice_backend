@@ -76,4 +76,25 @@ public class EmailTemplates {
                 <p><strong>%s</strong> was added to your playlist <strong>%s</strong>.</p>
                 """.formatted(songName, playlistName));
     }
+
+    public String albumDeleted(String albumName) {
+        return wrap("""
+                <h2 style="color:#E15554">Album deleted 🗑️</h2>
+                <p>Your album <strong>%s</strong> has been permanently deleted.</p>
+                """.formatted(albumName));
+    }
+
+    public String songDeleted(String songName) {
+        return wrap("""
+                <h2 style="color:#E15554">Song deleted 🗑️</h2>
+                <p>Your song <strong>%s</strong> has been permanently deleted.</p>
+                """.formatted(songName));
+    }
+
+    public String playlistDeleted(String playlistName) {
+        return wrap("""
+                <h2 style="color:#E15554">Playlist deleted 🗑️</h2>
+                <p>Your playlist <strong>%s</strong> has been permanently deleted.</p>
+                """.formatted(playlistName));
+    }
 }

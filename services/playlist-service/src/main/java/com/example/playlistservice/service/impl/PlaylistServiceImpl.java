@@ -12,6 +12,7 @@ import com.example.common_lib.payload.Request.PlaylistRequest;
 import com.example.common_lib.payload.enums.ErrorCode;
 import com.example.common_lib.payload.enums.UserRole;
 import com.example.common_lib.payload.event.PlaylistCreatedEvent;
+import com.example.common_lib.payload.event.PlaylistDeletedEvent;
 import com.example.playlistservice.mapper.PlaylistMapper;
 import com.example.playlistservice.model.Playlist;
 import com.example.playlistservice.repository.PlaylistRepository;
@@ -228,6 +229,14 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
 
         playlistRepository.delete(playlist);
+        kafkaTemplate.send(KafkaTopics.PLAYLIST_DELETED,
+                PlaylistDeletedEvent.builder()
+                        .playlistName(playlist.getName())
+                        .deletedByUserId(user.getId())
+                        .creatorEmail(user.getEmail())
+                        .fcmToken(user.getFcmToken())
+                        .build());
+
     }
 
     @Override

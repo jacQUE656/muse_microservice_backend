@@ -10,6 +10,7 @@ import com.example.common_lib.payload.DTO.UserDTO;
 import com.example.common_lib.payload.Request.SongRequest;
 import com.example.common_lib.payload.enums.ErrorCode;
 import com.example.common_lib.payload.enums.UserRole;
+import com.example.common_lib.payload.event.SongDeletedEvent;
 import com.example.common_lib.payload.event.SongUploadedEvent;
 import com.example.songservice.mapper.SongMapper;
 import com.example.songservice.model.Song;
@@ -171,6 +172,14 @@ public class SongServiceImpl implements SongService {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
         songRepository.delete(song);
+
+        kafkaTemplate.send(KafkaTopics.SONG_DELETED,
+                SongDeletedEvent.builder()
+                        .songName(song.getName())
+                        .deletedByUserId(user.getId())
+                        .uploaderEmail(user.getEmail())
+                        .fcmToken(user.getFcmToken())
+                        .build());
     }
 
     @Override

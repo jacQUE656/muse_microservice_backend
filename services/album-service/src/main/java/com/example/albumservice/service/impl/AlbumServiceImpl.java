@@ -15,6 +15,7 @@ import com.example.common_lib.payload.Request.AlbumRequest;
 import com.example.common_lib.payload.enums.ErrorCode;
 import com.example.common_lib.payload.enums.UserRole;
 import com.example.common_lib.payload.event.AlbumCreatedEvent;
+import com.example.common_lib.payload.event.AlbumDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -117,6 +118,14 @@ public class AlbumServiceImpl implements AlbumService {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
         albumRepository.deleteById(id);
+        // Publish event after successful save
+        kafkaTemplate.send(KafkaTopics.ALBUM_DELETED,
+                AlbumDeletedEvent.builder()
+                        .albumName(album.getName())
+                        .deletedByUserId(user.getId())
+                        .creatorEmail(user.getEmail())
+                        .fcmToken(user.getFcmToken())
+                        .build());
     }
 
     @Override

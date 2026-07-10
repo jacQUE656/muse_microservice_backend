@@ -56,4 +56,14 @@ public class InAppNotificationService {
     public void markAllAsRead(String userId) {
         notificationRepository.markAllAsReadByUserId(userId);
     }
+
+    @Transactional
+    public void delete(String notificationId) {
+        notificationRepository.deleteById(notificationId);
+    }
+
+    @Transactional
+    public void deleteAll(String userId) {
+        notificationRepository.deleteAllByUserId(userId);
+    }
 }

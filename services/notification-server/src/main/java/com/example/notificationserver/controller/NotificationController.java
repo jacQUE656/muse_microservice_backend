@@ -50,4 +50,10 @@ public class NotificationController {
         return ResponseEntity.ok(
                 new ApiResponse("All notifications marked as read"));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> delete(@PathVariable String id) {
+        inAppService.delete(id);
+        return ResponseEntity.ok(new ApiResponse("Notification deleted"));
+    }
 }
