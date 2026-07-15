@@ -50,3 +50,11 @@ logging:
         security: DEBUG
       hibernate:
         SQL: DEBUG
+
+razorpay:
+  api:
+    key: rzp_test_T2FvGG0wj1yE6j
+    secrete: UXqXdckmO8pjhqeOBGZJejeX
+stripe:
+  api:
+    key: sk_test_51P...YourFreshPersonalKeyHereWithNoSpaces
