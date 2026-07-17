@@ -4,9 +4,14 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {
+        "com.example.paymentservice",
+        "com.example.common_lib"
+})
 @EnableJpaAuditing
 @EnableFeignClients
 public class PaymentServiceApplication {
@@ -22,5 +27,4 @@ public class PaymentServiceApplication {
         );
         SpringApplication.run(PaymentServiceApplication.class, args);
     }
-
 }

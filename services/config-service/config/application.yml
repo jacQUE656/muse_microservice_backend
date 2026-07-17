@@ -54,7 +54,7 @@ logging:
 razorpay:
   api:
     key: rzp_test_a9B8cD7eF6gH1i
-    secrete: QwErTyUiOpAsDfGhHjKlZxCv
+    secret: QwErTyUiOpAsDfGhHjKlZxCv
 stripe:
   api:
     key: sk_test_51P8zW2kL9mNxO4pQ7rS5tU3vW1xY0zABcDeFgHiJkLmNoPqRsTuVwXyZ
