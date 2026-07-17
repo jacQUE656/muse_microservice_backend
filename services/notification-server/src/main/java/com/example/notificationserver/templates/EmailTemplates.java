@@ -97,4 +97,25 @@ public class EmailTemplates {
                 <p>Your playlist <strong>%s</strong> has been permanently deleted.</p>
                 """.formatted(playlistName));
     }
+
+    // amount is in the smallest currency unit (cents), same convention as
+    // PaymentOrder.amount / PaymentSuccessEvent.amount — formatted here as
+    // a decimal for display, not stored or recomputed anywhere.
+    public String premiumActivated(String firstName, String planId, String billingCycle, Long amount, String currency) {
+        String planName = capitalize(planId);
+        String cycleLabel = "annual".equals(billingCycle) ? "yearly" : "monthly";
+        String priceDisplay = "%s %.2f".formatted(currency, amount / 100.0);
+
+        return wrap("""
+                <h2 style="color:#6C63FF">You're Premium now! 🎉</h2>
+                <p>Hi <strong>%s</strong>,</p>
+                <p>Your <strong>%s</strong> plan is now active — billed %s at <strong>%s</strong>.</p>
+                <p>Enjoy ad-free listening, offline downloads, and full control over your queue.</p>
+                """.formatted(firstName, planName, cycleLabel, priceDisplay));
+    }
+
+    private String capitalize(String value) {
+        if (value == null || value.isBlank()) return value;
+        return Character.toUpperCase(value.charAt(0)) + value.substring(1).toLowerCase();
+    }
 }

@@ -26,4 +26,7 @@ public class UserDTO {
     @JsonProperty("isEmailVerified")
     private boolean isEmailVerified;
 
+    public String getFullName() {
+        return  firstName + " " + lastName;
+    }
 }

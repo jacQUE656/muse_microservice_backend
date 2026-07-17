@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum PaymentMethod {
     STRIPE,
     RAZORPAY,
-    CASH;
+    CARD;
 
     @JsonCreator
     public static PaymentMethod fromString(String value) {

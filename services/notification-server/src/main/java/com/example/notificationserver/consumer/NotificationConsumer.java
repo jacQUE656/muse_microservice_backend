@@ -209,4 +209,29 @@ public class NotificationConsumer {
                 "Playlist deleted",
                 "\"" + event.getPlaylistName() + "\" has been removed from Muse.");
     }
+
+    @KafkaListener(
+            topics = KafkaTopics.PAYMENT_SUCCESS,
+            groupId = "notification-service",
+            containerFactory = "paymentSuccessFactory")
+    public void onPaymentSuccess(PaymentSuccessEvent event) {
+        log.info("Payment success event: user={}, plan={}", event.getUserId(), event.getPlanId());
+
+        emailService.sendHtml(event.getEmail(),
+                "You're now Muse " + event.getPlanId() + "! 🎉",
+                templates.premiumActivated(
+                        event.getFirstName(),
+                        event.getPlanId(),
+                        event.getBillingCycle(),
+                        event.getAmount(),
+                        event.getCurrency()));
+
+        inAppService.save(event.getUserId(),
+                "Welcome to Premium!",
+                "Your " + event.getPlanId() + " plan is now active.");
+
+        pushService.sendPush(event.getFcmToken(),
+                "You're Premium now! 🎉",
+                "Enjoy ad-free listening and offline downloads.");
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Table(name = "users")
@@ -56,6 +57,13 @@ public class User {
     private boolean emailVerified;
 
     private String fcmToken;
+
+    @Builder.Default
+    private Boolean premium = false;
+
+    private String premiumPlan;       // "individual" | "duo" | "family"
+
+    private Instant premiumExpiresAt;
 
     public String getFullName() {
         return firstName + " " + lastName;
