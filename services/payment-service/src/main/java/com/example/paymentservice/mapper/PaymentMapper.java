@@ -6,8 +6,6 @@ import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class PaymentMapper {
     public static PaymentDto toPaymentDto(PaymentOrder paymentOrder) {
