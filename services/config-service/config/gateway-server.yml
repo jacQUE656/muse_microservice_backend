@@ -114,6 +114,15 @@ spring:
                   args:
                     allowedRoles: *standardRoles
 
+            - id: PAYMENT-SERVICE
+              uri: lb://PAYMENT-SERVICE
+              predicates:
+                - Path=/api/payments/**
+              filters:
+                - name: GatewayAuthFilter
+                  args:
+                    allowedRoles: *standardRoles
+
             - id: NOTIFICATION-SERVER
               uri: lb://NOTIFICATION-SERVER
               predicates:
