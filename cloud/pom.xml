@@ -18,6 +18,12 @@
     <modules>
 <!--        <module>eureka-server</module>-->
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-netflix-eureka-server</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
