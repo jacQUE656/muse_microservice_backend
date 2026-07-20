@@ -1,8 +1,8 @@
 eureka-server : 8761
-album server : 1001
+album server : 10001
 config-server : 8888
-user-server : 1002
-song-server : 1003
-playlist-server : 1004
-notification-server : 1005
-payment-server : 1006
+user-server : 10002
+song-server : 10003
+playlist-server : 10004
+notification-server : 10005
+payment-server : 10006

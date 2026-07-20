@@ -10,7 +10,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/${USER_DB}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
-    driver-class-name: corg.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
 
   security:
     oauth2:
