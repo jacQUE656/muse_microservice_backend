@@ -3,8 +3,7 @@ server:
 
 spring:
   datasource:
-    # 🔌 Appended safety flag to auto-create the database if missing
-    url: jdbc:mysql://localhost:3306/${ALBUM_DB:muse_album_db}?createDatabaseIfNotExist=true
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:postgresql://localhost:5432/${ALBUM_DB}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver

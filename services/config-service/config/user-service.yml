@@ -7,10 +7,10 @@ spring:
 
   datasource:
     # 🔌 Appended auto-create flag and environmental safety fallbacks
-    url: jdbc:mysql://localhost:3306/${USER_DB:muse_user_db}?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://localhost:5432/${USER_DB}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: corg.postgresql.Driver
 
   security:
     oauth2:
