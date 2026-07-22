@@ -1,4 +1,21 @@
+version: "3.8"
+
 services:
+  postgres:
+    image: postgres:14
+    container_name: muse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: muse
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - muse-net
+
   kafka:
     image: confluentinc/cp-kafka:7.7.1
     container_name: kafka
@@ -7,15 +24,184 @@ services:
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:9094,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,INTERNAL://kafka:9094
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
     volumes:
       - kafka-data:/var/lib/kafka/data
+    networks:
+      - muse-net
+
+  config-server:
+    build: ./services/config-server
+    container_name: config-server
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    networks:
+      - muse-net
+
+  eureka-server:
+    build: ./services/eureka-server
+    container_name: eureka-server
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    networks:
+      - muse-net
+
+  album-service:
+    build: ./services/album-service
+    container_name: album-service
+    restart: unless-stopped
+    ports:
+      - "10001:10001"
+    environment:
+      SERVER_PORT: 10001
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      DB_HOST: postgres
+      ALBUM_DB: muse_album_db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+    depends_on:
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+    networks:
+      - muse-net
+
+  song-service:
+    build: ./services/song-service
+    container_name: song-service
+    restart: unless-stopped
+    ports:
+      - "10003:10003"
+    environment:
+      SERVER_PORT: 10003
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      DB_HOST: postgres
+      SONG_DB: muse_song_db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+    networks:
+      - muse-net
+
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    restart: unless-stopped
+    ports:
+      - "10002:10002"
+    environment:
+      SERVER_PORT: 10002
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      DB_HOST: postgres
+      USER_DB: muse_user
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+    networks:
+      - muse-net
+
+  playlist-service:
+    build: ./services/playlist-service
+    container_name: playlist-service
+    restart: unless-stopped
+    ports:
+      - "10004:10004"
+    environment:
+      SERVER_PORT: 10004
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      DB_HOST: postgres
+      PLAYLIST_DB: muse_playlist_db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+    networks:
+      - muse-net
+
+  notification-service:
+    build: ./services/notification-service
+    container_name: notification-service
+    restart: unless-stopped
+    ports:
+      - "10005:10005"
+    environment:
+      SERVER_PORT: 10005
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      DB_HOST: postgres
+      NOTIFICATION_DB: muse_notification_db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+    networks:
+      - muse-net
+
+  payment-service:
+    build: ./services/payment-service
+    container_name: payment-service
+    restart: unless-stopped
+    ports:
+      - "10006:10006"
+    environment:
+      SERVER_PORT: 10006
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      DB_HOST: postgres
+      PAYMENT_DB: muse_payment_db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+    networks:
+      - muse-net
+
+networks:
+  muse-net:
+    driver: bridge
 
 volumes:
+  pgdata:
   kafka-data:

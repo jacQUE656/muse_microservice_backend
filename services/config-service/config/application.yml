@@ -35,7 +35,7 @@ spring:
       max-request-size: 50MB
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
@@ -53,8 +53,8 @@ logging:
 
 razorpay:
   api:
-    key: rzp_test_T2FvGG0wj1yE6j
-    secret: UXqXdckmO8pjhqeOBGZJejeX
+    key: ${RAZORPAY_API_KEY}
+    secret: ${RAZORPAY_API_SECRET}
 stripe:
   api:
-    key: sk_test_51P8zW2kL9mNxO4pQ7rS5tU3vW1xY0zABcDeFgHiJkLmNoPqRsTuVwXyZ
+    key: ${STRIPE_API_KEY}
