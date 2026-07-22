@@ -15,13 +15,16 @@
     <name>Business Services</name>
     <description>Aggregator for all business services (user, etc...)</description>
 
-    <modules>
-    <module>album-service</module>
-        <module>playlist-service</module>
-        <module>song-service</module>
-        <module>user-service</module>
-        <module>config-service</module>
-    </modules>
+
+        <modules>
+            <module>album-service</module>
+            <module>playlist-service</module>
+            <module>song-service</module>
+            <module>user-service</module>
+            <module>config-service</module>
+            <module>notification-server</module>
+            <module>payment-service</module>
+        </modules>
 
     <build>
         <plugins>

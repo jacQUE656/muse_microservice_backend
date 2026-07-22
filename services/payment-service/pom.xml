@@ -116,7 +116,7 @@
                 <configuration>
                     <skip>false</skip>
                     <to>
-                        <image>jacque56/saloon-payment:v1</image>
+                        <image>jacque56/muse-payment:v1</image>
                     </to>
                 </configuration>
             </plugin>
