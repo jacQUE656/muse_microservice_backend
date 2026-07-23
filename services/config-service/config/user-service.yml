@@ -7,7 +7,7 @@ spring:
 
   datasource:
     # 🔌 Appended auto-create flag and environmental safety fallbacks
-    url: jdbc:postgresql://localhost:5432/${USER_DB}
+    url: jdbc:postgresql://muse-postgres:5432/${USER_DB}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
