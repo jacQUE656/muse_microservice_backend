@@ -20,6 +20,7 @@ public class SongServiceApplication {
         Dotenv dotenv = Dotenv.configure()
                 .directory(System.getProperty("user.dir"))
                 .filename(".env")
+                .ignoreIfMissing()
                 .load();
 
         dotenv.entries().forEach(entry ->

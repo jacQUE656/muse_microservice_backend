@@ -42,6 +42,6 @@ build/
 logs/
 
 ### Firebase ###
-src/main/resources/*firebase-adminsdk*.json
-src/main/resources/firebase-service-account.json
-src/main/resources/muse-9c85c-firebase-adminsdk-fbsvc-*.json
+**/src/main/resources/*firebase-adminsdk*.json
+**/src/main/resources/firebase-service-account.json
+**/src/main/resources/muse-9c85c-firebase-adminsdk-fbsvc-*.json

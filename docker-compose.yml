@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: muse
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -35,7 +35,7 @@ services:
       - muse-net
 
   config-server:
-    build: ./services/config-service
+    image: jacque56/muse-config:v1
     container_name: config-service
     restart: unless-stopped
     ports:
@@ -44,7 +44,7 @@ services:
       - muse-net
 
   eureka-server:
-    build: ./cloud/eureka-server
+    image: jacque56/muse_eurekaserver:v1
     container_name: eureka-server
     restart: unless-stopped
     ports:
@@ -55,7 +55,7 @@ services:
       - muse-net
 
   gateway-service:
-    build: ./cloud/gateway-server
+    image: jacque56/muse_gateway_server:v1
     container_name: gateway-server
     restart: unless-stopped
     ports:
@@ -71,7 +71,7 @@ services:
       - muse-net
 
   album-service:
-    build: ./services/album-service
+    image: jacque56/muse-album:v1
     container_name: album-service
     restart: unless-stopped
     ports:
@@ -98,7 +98,7 @@ services:
       - muse-net
 
   song-service:
-    build: ./services/song-service
+    image: jacque56/muse-song:v1
     container_name: song-service
     restart: unless-stopped
     ports:
@@ -122,7 +122,7 @@ services:
       - muse-net
 
   user-service:
-    build: ./services/user-service
+    image: jacque56/muse-user:v1
     container_name: user-service
     restart: unless-stopped
     ports:
@@ -146,7 +146,7 @@ services:
       - muse-net
 
   playlist-service:
-    build: ./services/playlist-service
+    image: jacque56/muse-playlist:v1
     container_name: playlist-service
     restart: unless-stopped
     ports:
@@ -170,7 +170,7 @@ services:
       - muse-net
 
   notification-service:
-    build: ./services/notification-server
+    image: jacque56/muse-notification:v1
     container_name: notification-server
     restart: unless-stopped
     ports:
@@ -194,7 +194,7 @@ services:
       - muse-net
 
   payment-service:
-    build: ./services/payment-service
+    image: jacque56/muse-payment:v1
     container_name: payment-service
     restart: unless-stopped
     ports:

@@ -20,15 +20,13 @@ public class PlaylistServiceApplication {
         Dotenv dotenv = Dotenv.configure()
                 .directory(System.getProperty("user.dir"))
                 .filename(".env")
+                .ignoreIfMissing()
                 .load();
 
         dotenv.entries().forEach(entry ->
                 System.setProperty(entry.getKey(), entry.getValue())
         );
 
-        // Confirm values resolved before Spring starts
-        System.out.println(">>> DB_USERNAME = " + System.getProperty("DB_USERNAME"));
-        System.out.println(">>> PLAYLIST_DB = " + System.getProperty("PLAYLIST_DB"));
 
         SpringApplication.run(PlaylistServiceApplication.class, args);
     }
