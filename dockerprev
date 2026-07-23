@@ -11,11 +11,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U muse"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks:
       - muse-net
 
@@ -45,11 +40,6 @@ services:
     restart: unless-stopped
     ports:
       - "8888:8888"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
     networks:
       - muse-net
 
@@ -60,13 +50,7 @@ services:
     ports:
       - "8761:8761"
     depends_on:
-      config-server:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - config-server
     networks:
       - muse-net
 
@@ -81,10 +65,8 @@ services:
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     depends_on:
-      config-server:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
+      - config-server
+      - eureka-server
     networks:
       - muse-net
 
@@ -107,16 +89,11 @@ services:
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
     depends_on:
-      postgres:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      gateway-service:
-        condition: service_started
-      kafka:
-        condition: service_started
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+      - gateway-service
     networks:
       - muse-net
 
@@ -136,16 +113,11 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
-      postgres:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      gateway-service:
-        condition: service_started
-      kafka:
-        condition: service_started
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+      - gateway-service
     networks:
       - muse-net
 
@@ -165,16 +137,11 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
-      postgres:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      gateway-service:
-        condition: service_started
-      kafka:
-        condition: service_started
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+      - gateway-service
     networks:
       - muse-net
 
@@ -194,16 +161,11 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
-      postgres:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      gateway-service:
-        condition: service_started
-      kafka:
-        condition: service_started
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+      - gateway-service
     networks:
       - muse-net
 
@@ -223,16 +185,11 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
-      postgres:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      gateway-service:
-        condition: service_started
-      kafka:
-        condition: service_started
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+      - gateway-service
     networks:
       - muse-net
 
@@ -252,16 +209,11 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
-      postgres:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      gateway-service:
-        condition: service_started
-      kafka:
-        condition: service_started
+      - postgres
+      - config-server
+      - eureka-server
+      - kafka
+      - gateway-service
     networks:
       - muse-net
 
