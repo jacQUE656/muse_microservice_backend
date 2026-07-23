@@ -2,4 +2,4 @@ spring:
   application:
     name: user-service  # <-- This tells it to go look for 'user-service.yml' on the server
   config:
-    import: "optional:configserver:http://localhost:8888"
+    import: "optional:configserver:${SPRING_CLOUD_CONFIG_URI:http://localhost:8888}"
